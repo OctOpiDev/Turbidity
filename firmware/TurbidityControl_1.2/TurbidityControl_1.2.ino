@@ -1,7 +1,6 @@
 #include <RTClib.h>
 
 #include <EEPROM.h>
-
 //byte OLED_ADDR = 0x09;
 
 #include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C.
