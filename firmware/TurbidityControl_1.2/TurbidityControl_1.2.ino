@@ -19,7 +19,7 @@ RTC_DS1307 rtc;
 #define CONTRAST_POINT 15
 #define IN_PERCENT 1
 
-#define VERSION "0.1.1"
+#define VERSION "1.2"
 
 #define MIN_VALUE 0
 #define MAX_VALUE 100
