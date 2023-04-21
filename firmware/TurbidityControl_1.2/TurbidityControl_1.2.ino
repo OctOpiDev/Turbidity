@@ -306,7 +306,7 @@ void printPointer(uint8_t pointer) {
   }
 }
 void drawIcon8x8(byte index) {
-  size_t s = sizeof icons_8x8[index];//можна так, а можна просто 8 
+  size_t s = sizeof icons_8x8[index];
   for(unsigned int i = 0; i < s; i++) {
     oled.drawByte(pgm_read_byte(&(icons_8x8[index][i])));
   }
