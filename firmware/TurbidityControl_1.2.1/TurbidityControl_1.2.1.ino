@@ -1,6 +1,6 @@
 #define VERSION "1.2.1"
 
-#include <RTClib.h>
+#include <microDS3231.h>
 #include <EEPROM.h>
 #include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C.
 #include <GyverOLED.h>
@@ -18,7 +18,8 @@
 
 iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.
 GyverOLED<SSH1106_128x64> oled;    
-RTC_DS1307 rtc;
+
+MicroDS3231 rtc;
  
 
 const static uint8_t icons_8x8[][8] PROGMEM = {
@@ -58,25 +59,16 @@ void setup(){
    
     enc.begin();  
 
-    if (! rtc.begin()) {
-    Serial.println("Couldn't find RTC");
-    Serial.flush();
-    abort();
-  }
+    if (!rtc.begin()) {
+        Serial.println("DS3231 not found");
+        for(;;);
+    }
 }                                                 
                                           
 void loop(){  
 //    menuGUI();
+timeScreen();
 
-DateTime now = rtc.now();
-
-//Serial.print(now.hour(), DEC);
-//   Serial.print(':');
-//   Serial.print(now.minute(), DEC);
-//   Serial.print(':');
-//   Serial.print(now.second(), DEC);
-//   Serial.println();
-//   delay(3000);
 
     if(serviceFlag){
         menuGUI();    
@@ -319,3 +311,9 @@ void oledSplash(){
     delay(2000);
     
   }
+
+void timeScreen(){
+   Serial.println(rtc.getTimeString());
+    Serial.println();
+  delay(500);
+}
