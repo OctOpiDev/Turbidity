@@ -67,8 +67,6 @@ void setup(){
                                           
 void loop(){  
 //    menuGUI();
-timeScreen();
-
 
     if(serviceFlag){
         menuGUI();    
@@ -308,16 +306,18 @@ void oledSplash(){
     oled.setCursor(6,3);
     oled.print(F("Turbidity_sensor \n\r\n\r"" v1.0.2"));
     oled.update();
-    delay(2000);
+    delay(500);
     
   }
 
 void timeScreen(){
     DateTime now = rtc.getTime();
 
+    oled.home();
     if(now.hour<10) oled.print("0");
         oled.print(now.hour);
         oled.print(":");
     if(now.minute<10) oled.print("0");
-        oled.print(now.minute);
+      oled.print(now.minute);
+
 }
