@@ -315,7 +315,6 @@ void oledSplash(){
 void timeScreen(){
     DateTime now = rtc.getTime();
 
-    oled.home();
     if(now.hour<10) oled.print("0");
         oled.print(now.hour);
         oled.print(":");
