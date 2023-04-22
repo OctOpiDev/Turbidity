@@ -1,30 +1,24 @@
-#include <RTClib.h>
+#define VERSION "1.2"
 
+#include <RTClib.h>
 #include <EEPROM.h>
 #include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C.
 #include <GyverOLED.h>
 #include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash.
-iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.
-GyverOLED<SSH1106_128x64> oled;    
-
-RTC_DS1307 rtc;
 
 #define PIN_TONE 13            
 #define sensorPin A7
-
 #define SYSTEM_DATA_ADDR 0
-
 #define MAIN_MENU_ITEM 6
-
 #define CONTRAST_POINT 15
 #define IN_PERCENT 1
-
-#define VERSION "1.2"
-
 #define MIN_VALUE 0
 #define MAX_VALUE 100
-
 #define TIME_SENSOR 30
+
+iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.
+GyverOLED<SSH1106_128x64> oled;    
+RTC_DS1307 rtc;
  
 
 const static uint8_t icons_8x8[][8] PROGMEM = {
