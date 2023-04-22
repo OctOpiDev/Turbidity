@@ -58,7 +58,7 @@ void setup(){
     oledSplash();
    
     enc.begin();  
-
+    rtc.setTime(BUILD_SEC, BUILD_MIN, BUILD_HOUR, BUILD_DAY, BUILD_MONTH, BUILD_YEAR);
     if (!rtc.begin()) {
         Serial.println("DS3231 not found");
         for(;;);
@@ -243,7 +243,7 @@ void readSensor(){
     oled.clear();
     oled.home();
     oled.setScale(1);
-    oled.print("Мутность");
+   timeScreen();
 
     if(systemData.soundP == 1  && sensorValue > 0){
       Power_tone();
@@ -313,7 +313,12 @@ void oledSplash(){
   }
 
 void timeScreen(){
-   Serial.println(rtc.getTimeString());
-    Serial.println();
-  delay(500);
+    DateTime now = rtc.getTime();
+
+    oled.home();
+    if(now.hour<10) oled.print("0");
+        oled.print(now.hour);
+        oled.print(":");
+    if(now.minute<10) oled.print("0");
+        oled.print(now.minute);
 }
