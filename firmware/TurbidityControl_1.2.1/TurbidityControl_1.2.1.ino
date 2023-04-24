@@ -254,7 +254,7 @@ void readSensor(){
       }
 
      oled.setScale(1);
-     oled.setCursorXY(38, 25); 
+     oled.setCursorXY(38, 55); 
      if(sensorValue==0){
         oled.setScale(1);
         oled.print("Нет связи ");
@@ -274,10 +274,11 @@ void readSensor(){
     oled.print(volt);
     oled.print(" V");
 
-
+oled.setScale(2);
+     oled.setCursorXY(0, 25); 
     oled.print(ntu);
-    oled.print(" NTU");
-     oled.setScale(1);
+    oled.print(" ntu");
+     
         }else{
           oled.print(turbidity);
      oled.setScale(1);
