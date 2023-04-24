@@ -271,10 +271,10 @@ void readSensor(){
       }else{
         if(systemData.percent == 0){
 //      oled.print(sensorValue);
-oled.print(volt);
+    oled.print(volt);
     oled.print(" V");
 
-    oled.setCursor(0,1);
+
     oled.print(ntu);
     oled.print(" NTU");
      oled.setScale(1);
@@ -316,7 +316,7 @@ void oledSplash(){
     Power_tone();
     oled.clear();
     oled.setCursor(6,3);
-    oled.print(F("Turbidity_sensor \n\r\n\r"" v1.0.2"));
+    oled.print(F("Turbidity_sensor \n\r\n\r"" v1.2.1"));
     oled.update();
     delay(500);
     
@@ -336,6 +336,7 @@ void timeScreen(){
 
 void sens(){
     volt = 0;
+    
     for(int i=0; i<800; i++)
     {
         volt += ((float)analogRead(sensorPin)/1023)*4*2.5;
@@ -347,6 +348,7 @@ void sens(){
     }else{
       ntu = -1120.4*square(volt)+5742.3*volt-4353.8; 
     }
+    if(volt == 4.1)  ntu=0;
   }
 
 float round_to_dp( float in_value, int decimal_place )
