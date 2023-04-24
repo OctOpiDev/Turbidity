@@ -50,6 +50,9 @@ struct {
   int16_t maxP;
 } systemData;
 
+float volt;
+float ntu;
+
 void setup(){     
     Serial.begin(9600);  
     EEPROM.get(SYSTEM_DATA_ADDR, systemData);                                
@@ -235,6 +238,8 @@ void readSensor(){
    
    int sensorValue = analogRead(sensorPin);
    int turbidity = map(sensorValue, systemData.minP, systemData.maxP, MAX_VALUE, MIN_VALUE);
+
+   
    
   if (millis() - tmr >= systemData.timeP) {
     tmr = millis();
@@ -242,12 +247,13 @@ void readSensor(){
     oled.home();
     oled.setScale(1);
    timeScreen();
+   sens();
 
     if(systemData.soundP == 1  && sensorValue > 0){
       Power_tone();
       }
 
-     oled.setScale(4);
+     oled.setScale(1);
      oled.setCursorXY(38, 25); 
      if(sensorValue==0){
         oled.setScale(1);
@@ -264,7 +270,13 @@ void readSensor(){
         drawIcon8x8(7);
       }else{
         if(systemData.percent == 0){
-      oled.print(sensorValue);
+//      oled.print(sensorValue);
+oled.print(volt);
+    oled.print(" V");
+
+    oled.setCursor(0,1);
+    oled.print(ntu);
+    oled.print(" NTU");
      oled.setScale(1);
         }else{
           oled.print(turbidity);
@@ -320,4 +332,26 @@ void timeScreen(){
     if(now.minute<10) oled.print("0");
       oled.print(now.minute);
 
+}
+
+void sens(){
+    volt = 0;
+    for(int i=0; i<800; i++)
+    {
+        volt += ((float)analogRead(sensorPin)/1023)*4*2.5;
+    }
+    volt = volt/800;
+    volt = round_to_dp(volt,1);
+    if(volt < 2.5){
+      ntu = 3000;
+    }else{
+      ntu = -1120.4*square(volt)+5742.3*volt-4353.8; 
+    }
+  }
+
+float round_to_dp( float in_value, int decimal_place )
+{
+  float multiplier = powf( 10.0f, decimal_place );
+  in_value = roundf( in_value * multiplier ) / multiplier;
+  return in_value;
 }
