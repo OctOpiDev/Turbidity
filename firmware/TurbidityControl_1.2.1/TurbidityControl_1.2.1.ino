@@ -7,7 +7,7 @@
 #include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash.
 
 #define PIN_TONE 13            
-#define sensorPin A7
+#define PIN_SENSOR A7
 #define SYSTEM_DATA_ADDR 0
 #define MAIN_MENU_ITEM 6
 #define CONTRAST_POINT 15
@@ -58,14 +58,11 @@ void setup(){
     EEPROM.get(SYSTEM_DATA_ADDR, systemData);                                
                              
     oledInit();
+    timeInit();
     oledSplash();
    
     enc.begin();  
-    rtc.setTime(BUILD_SEC, BUILD_MIN, BUILD_HOUR, BUILD_DAY, BUILD_MONTH, BUILD_YEAR);
-    if (!rtc.begin()) {
-        Serial.println("DS3231 not found");
-        for(;;);
-    }
+    
 }                                                 
                                           
 void loop(){  
@@ -86,7 +83,6 @@ void loop(){
 void menuGUI(){
    static int8_t pointer = 1; // Переменная указатель  
 
-   
     int turnL=0, turnR=0;      
     
     turnL=enc.getEncoder(ENC_TURN_LEFT);          //   Считываем количество тактов поворота энкодера влево  (против часовой стрелки).
@@ -224,7 +220,6 @@ void drawBattery() {
       oled.drawByte(0b1000001);
       oled.drawByte(0b1111111);  // попка
 //      oled.update();
-
 }
 
 void oledInit() {
@@ -236,7 +231,7 @@ void oledInit() {
 void readSensor(){
    static uint32_t tmr;
    
-   int sensorValue = analogRead(sensorPin);
+   int sensorValue = analogRead(PIN_SENSOR);
    int turbidity = map(sensorValue, systemData.minP, systemData.maxP, MAX_VALUE, MIN_VALUE);
 
    
@@ -302,6 +297,7 @@ void printPointer(uint8_t pointer) {
       oled.print("<");
   }
 }
+
 void drawIcon8x8(byte index) {
   size_t s = sizeof icons_8x8[index];
   for(unsigned int i = 0; i < s; i++) {
@@ -319,9 +315,8 @@ void oledSplash(){
     oled.setCursor(6,3);
     oled.print(F("Turbidity_sensor \n\r\n\r"" v1.2.1"));
     oled.update();
-    delay(500);
-    
-  }
+    delay(500);    
+}
 
 void timeScreen(){
     DateTime now = rtc.getTime();
@@ -332,7 +327,6 @@ void timeScreen(){
         oled.print(":");
     if(now.minute<10) oled.print("0");
       oled.print(now.minute);
-
 }
 
 void sens(){
@@ -340,7 +334,7 @@ void sens(){
     
     for(int i=0; i<800; i++)
     {
-        volt += ((float)analogRead(sensorPin)/1023)*4*2.5;
+        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5;
     }
     volt = volt/800;
     volt = round_to_dp(volt,1);
@@ -351,11 +345,18 @@ void sens(){
     }
     if(volt == 4.1)  ntu=0;
     if(volt > 4.2)   ntu=0;
-  }
+}
 
-float round_to_dp( float in_value, int decimal_place )
-{
+float round_to_dp( float in_value, int decimal_place ){
   float multiplier = powf( 10.0f, decimal_place );
   in_value = roundf( in_value * multiplier ) / multiplier;
   return in_value;
+}
+
+void timeInit(){
+    rtc.setTime(BUILD_SEC, BUILD_MIN, BUILD_HOUR, BUILD_DAY, BUILD_MONTH, BUILD_YEAR);
+    if (!rtc.begin()) {
+        Serial.println("DS3231 not found");
+        for(;;);
+    }
 }
