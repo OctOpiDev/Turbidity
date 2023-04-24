@@ -1,13 +1,13 @@
-#define VERSION "1.2.1"
+#define VERSION "1.2.1"                           //   Версия прошивки
 
-#include <microDS3231.h>
-#include <EEPROM.h>
-#include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C.
-#include <GyverOLED.h>
-#include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash.
+#include <microDS3231.h>                          //   Подключаем библиотеку для работы с RTC DS3231 (часы реального времени)
+#include <EEPROM.h>                               //   Подключаем библиотеку для работы с энергонезависимая память EEPROM
+#include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C
+#include <GyverOLED.h>                            //   Подключаем библиотеку для работы с OLED дисплеем
+#include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash
 
-#define PIN_TONE 13            
-#define PIN_SENSOR A7
+#define PIN_TONE 13                               //   Объявляем пин для работы с пьезо бузером
+#define PIN_SENSOR A7                             //   Объявляем пин для работы с выносным погружным датчиком
 #define SYSTEM_DATA_ADDR 0
 #define MAIN_MENU_ITEM 6
 #define CONTRAST_POINT 15
@@ -17,10 +17,8 @@
 #define TIME_SENSOR 30
 
 iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.
-GyverOLED<SSH1106_128x64> oled;    
-
-MicroDS3231 rtc;
- 
+GyverOLED<SSH1106_128x64> oled;                   //   Объявляем объект oled для работы с OLED дисплеем
+MicroDS3231 rtc;                                  //   Объявляем объект rtc для работы с RTC DS3231 (часы реального времени)
 
 const static uint8_t icons_8x8[][8] PROGMEM = {
   {0xff, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xff}, //false sqr
