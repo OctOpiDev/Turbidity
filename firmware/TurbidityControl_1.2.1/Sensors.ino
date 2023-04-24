@@ -11,8 +11,8 @@ void readSensor(){
     oled.clear();
     oled.home();
     oled.setScale(1);
-   timeScreen();
-   sens();
+    timeScreen();
+    sens();
 
     if(systemData.soundP == 1  && sensorValue > 0){
       Power_tone();
@@ -36,18 +36,16 @@ void readSensor(){
       }else{
         if(systemData.percent == 0){
 //      oled.print(sensorValue);
-    oled.print(volt);
-    oled.print(" V");
-
-//oled.setScale(2);
-     oled.setCursorXY(0, 25); 
-    oled.print(ntu);
-    oled.print(" ntu");
+        oled.print(volt);
+        oled.print(" V");
+        oled.setCursorXY(0, 25); 
+        oled.print(ntu);
+        oled.print(" ntu");
      
         }else{
-          oled.print(turbidity);
-     oled.setScale(1);
-     oled.print("%");
+            oled.print(turbidity);
+            oled.setScale(1);
+            oled.print("%");
           }
         }
     

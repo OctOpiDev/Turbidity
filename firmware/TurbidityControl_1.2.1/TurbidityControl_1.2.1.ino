@@ -1,11 +1,14 @@
 #define VERSION "1.2.1"                           //   Версия прошивки
 
+// ================== БИБЛИОТЕКИ ===============
 #include <Wire.h>                                 //   Подключаем библиотеку для работы с аппаратной шиной I2C
 #include <microDS3231.h>                          //   Подключаем библиотеку для работы с RTC DS3231 (часы реального времени)
 #include <EEPROM.h>                               //   Подключаем библиотеку для работы с энергонезависимая память EEPROM
 #include <GyverOLED.h>                            //   Подключаем библиотеку для работы с OLED дисплеем
 #include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash
 
+
+// ================== РАЗНОЕ ===================
 #define PIN_TONE 13                               //   Объявляем пин для работы с пьезо бузером
 #define PIN_SENSOR A7                             //   Объявляем пин для работы с выносным погружным датчиком
 #define SYSTEM_DATA_ADDR 0
@@ -16,6 +19,8 @@
 #define MAX_VALUE 100
 #define TIME_SENSOR 30
 
+
+// ================== ОБЪЕКТЫ ==================
 iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.
 GyverOLED<SSH1106_128x64> oled;                   //   Объявляем объект oled для работы с OLED дисплеем
 MicroDS3231 rtc;                                  //   Объявляем объект rtc для работы с RTC DS3231 (часы реального времени)
@@ -220,11 +225,6 @@ void drawBattery() {
 //      oled.update();
 }
 
-void oledInit() {
-    oled.init();  
-    oled.clear();
-    oled.setContrast(systemData.contrast);
-}
 
 
 
@@ -292,12 +292,4 @@ float round_to_dp( float in_value, int decimal_place ){
   float multiplier = powf( 10.0f, decimal_place );
   in_value = roundf( in_value * multiplier ) / multiplier;
   return in_value;
-}
-
-void timeInit(){
-    rtc.setTime(BUILD_SEC, BUILD_MIN, BUILD_HOUR, BUILD_DAY, BUILD_MONTH, BUILD_YEAR);
-    if (!rtc.begin()) {
-        Serial.println("DS3231 not found");
-        for(;;);
-    }
 }
