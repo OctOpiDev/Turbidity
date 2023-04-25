@@ -35,12 +35,17 @@ void readSensor(){
         drawIcon8x8(7);
       }else{
         if(systemData.percent == 0){
+
+        oled.setScale(2);
+        oled.setCursor(0,3); 
+        oled.print(ntu);
+//        oled.print(" NTU");
+
+        oled.setScale(1);
+        oled.setCursorXY(0, 56);
 //      oled.print(sensorValue);
         oled.print(volt);
         oled.print(" V");
-        oled.setCursorXY(0, 25); 
-        oled.print(ntu);
-        oled.print(" ntu");
      
         }else{
             oled.print(turbidity);

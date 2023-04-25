@@ -59,7 +59,7 @@ float ntu;
 void setup(){     
     Serial.begin(9600);  
     EEPROM.get(SYSTEM_DATA_ADDR, systemData);                                
-                             
+                       
     oledInit();
     timeInit();
     oledSplash();
@@ -102,7 +102,7 @@ void menuGUI(){
             EEPROM.put(SYSTEM_DATA_ADDR,systemData);
         }
         if(!mainMenu && pointer==2){
-            systemData.timeP = constrain(systemData.timeP - 5000, 5000, 30000);
+            systemData.timeP = constrain(systemData.timeP - 10, 30, 30000);
             EEPROM.put(SYSTEM_DATA_ADDR,systemData);
         }
         if(!mainMenu && pointer==3){
@@ -138,7 +138,7 @@ void menuGUI(){
         EEPROM.put(SYSTEM_DATA_ADDR,systemData);
         }
       if(!mainMenu && pointer==2){
-        systemData.timeP = constrain(systemData.timeP + 5000, 5000, 30000);
+        systemData.timeP = constrain(systemData.timeP + 10, 30, 30000);
         EEPROM.put(SYSTEM_DATA_ADDR,systemData);
       }
       if(!mainMenu && pointer==3){
@@ -251,5 +251,5 @@ void oledSplash(){
     oled.setCursor(6,3);
     oled.print(F("Turbidity_sensor \n\r\n\r"" v1.2.1"));
     oled.update();
-    delay(500);    
+    delay(3000);    
 }
