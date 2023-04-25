@@ -69,13 +69,11 @@ void setup(){
 }                                                 
                                           
 void loop(){  
-//    menuGUI();
-
     if(serviceFlag){
         menuGUI();    
     }else{
-       readSensor();
-      }   
+        readSensor();
+    }   
 
       if( enc.getButton(KEY_TIME_PRESSED) == 2000 ){ //   Если время удержания кнопки возвращаемое функцией getButton больше 5000 миллисекунд, то...
         serviceFlag = !serviceFlag;        //   Выводим текст.
@@ -225,9 +223,6 @@ void drawBattery() {
 //      oled.update();
 }
 
-
-
-
 void printPointer(uint8_t pointer) {
   // Указатель в начале строки
   if(mainMenu){  
@@ -257,39 +252,4 @@ void oledSplash(){
     oled.print(F("Turbidity_sensor \n\r\n\r"" v1.2.1"));
     oled.update();
     delay(500);    
-}
-
-void timeScreen(){
-    DateTime now = rtc.getTime();
-
-    oled.home();
-    if(now.hour<10) oled.print("0");
-        oled.print(now.hour);
-        oled.print(":");
-    if(now.minute<10) oled.print("0");
-      oled.print(now.minute);
-}
-
-void sens(){
-    volt = 0;
-    
-    for(int i=0; i<800; i++)
-    {
-        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5;
-    }
-    volt = volt/800;
-    volt = round_to_dp(volt,1);
-    if(volt < 2.5){
-      ntu = 3000;
-    }else{
-      ntu = -1120.4*square(volt)+5742.3*volt-4353.8; 
-    }
-    if(volt == 4.1)  ntu=0;
-    if(volt > 4.2)   ntu=0;
-}
-
-float round_to_dp( float in_value, int decimal_place ){
-  float multiplier = powf( 10.0f, decimal_place );
-  in_value = roundf( in_value * multiplier ) / multiplier;
-  return in_value;
 }
