@@ -65,7 +65,8 @@ void sens(){
     
     for(int i=0; i<800; i++)
     {
-        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5;
+//        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5; //sensor1
+        volt += ((float)analogRead(PIN_SENSOR)/1023)*4; //sensor2
     }
     volt = volt/800;
     volt = round_to_dp(volt,1);
