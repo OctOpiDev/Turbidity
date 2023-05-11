@@ -19,6 +19,8 @@
 #define MAX_VALUE 100
 #define TIME_SENSOR 30
 
+#define CONST_SENSOR 2      //  коректировка сенсора
+
 
 // ================== ОБЪЕКТЫ ==================
 iarduino_I2C_Encoder enc(0x09);                   //   Объявляем объект enc для работы с функциями и методами библиотеки iarduino_I2C_Encoder, указывая адрес модуля на шине I2C.

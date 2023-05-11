@@ -11,7 +11,7 @@ void readSensor(){
     oled.clear();
     oled.home();
     oled.setScale(1);
-    timeScreen();
+//    timeScreen();
     sens();
 
     if(systemData.soundP == 1  && sensorValue > 0){
@@ -55,7 +55,7 @@ void readSensor(){
         }
     
      
-    drawBattery();
+//    drawBattery();
     oled.update();
   }
 }
@@ -65,8 +65,8 @@ void sens(){
     
     for(int i=0; i<800; i++)
     {
-//       volt += ((float)analogRead(PIN_SENSOR)/1023)*4; //sensor0
-    volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5; //sensor1
+       volt += ((float)analogRead(PIN_SENSOR)/1023)*5*1.52 ; //sensor0   коректировка сенсора
+//    volt += ((float)analogRead(PIN_SENSOR)/1023)*4*2.5; //sensor1
 //        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*3.5; //sensor2
     }
     volt = volt/800;
