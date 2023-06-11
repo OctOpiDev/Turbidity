@@ -65,7 +65,7 @@ void sens(){
     
     for(int i=0; i<800; i++)
     {
-       volt += ((float)analogRead(PIN_SENSOR)/1023)*5*2.1; //sensor0   коректировка сенсора
+       volt += ((float)analogRead(PIN_SENSOR)/1023)*5*1.85; //sensor0   коректировка сенсора
 //       volt += ((float)analogRead(PIN_SENSOR)/1023)*5*1.9; //sensor0   коректировка сенсора
 //        volt += ((float)analogRead(PIN_SENSOR)/1023)*4*3.5; //sensor2
     }
