@@ -6,7 +6,7 @@
 #include <EEPROM.h>                               //   Подключаем библиотеку для работы с энергонезависимая память EEPROM
 #include <GyverOLED.h>                            //   Подключаем библиотеку для работы с OLED дисплеем
 #include <iarduino_I2C_Encoder.h>                 //   Подключаем библиотеку для работы с энкодером I2C-flash
-
+#include "GyverButton.h"
 
 // ================== РАЗНОЕ ===================
 #define PIN_TONE 13                               //   Объявляем пин для работы с пьезо бузером
@@ -20,6 +20,9 @@
 #define TIME_SENSOR 30
 
 #define CONST_SENSOR 2      //  коректировка сенсора
+
+#define BTN_PIN_L 3 // кнопка
+#define BTN_PIN_R 4 // кнопка
 
 
 // ================== ОБЪЕКТЫ ==================
@@ -58,40 +61,47 @@ struct {
 float volt;
 float ntu;
 
+GButton btn_L(BTN_PIN_L);
+GButton btn_R(BTN_PIN_R);
+
 void setup(){     
     Serial.begin(9600);  
     EEPROM.get(SYSTEM_DATA_ADDR, systemData);                                
                        
-    oledInit();
-    timeInit();
+    OledInit();        // Инициализация дисплея
+    TimeInit();        // Инициализация Часов RTC
+    BtnInit();         // Инициализация кнопок
+    
     oledSplash();
    
     enc.begin();  
-    
+
+   
 }                                                 
                                           
 void loop(){  
+    btn_L.tick();
+    btn_R.tick();
+
+    if (btn_L.isHolded()) {
+        Serial.println("Click menu");  
+        serviceFlag = !serviceFlag; 
+    }
+
     if(serviceFlag){
         menuGUI();    
     }else{
         readSensor();
     }   
 
-      if( enc.getButton(KEY_TIME_PRESSED) == 2000 ){ //   Если время удержания кнопки возвращаемое функцией getButton больше 5000 миллисекунд, то...
-        serviceFlag = !serviceFlag;        //   Выводим текст.
-    } 
+     
 }   
 
 
 void menuGUI(){
    static int8_t pointer = 1; // Переменная указатель  
-
-    int turnL=0, turnR=0;      
     
-    turnL=enc.getEncoder(ENC_TURN_LEFT);          //   Считываем количество тактов поворота энкодера влево  (против часовой стрелки).
-    turnR=enc.getEncoder(ENC_TURN_RIGHT);         //   Считываем количество тактов поворота энкодера вправо (по     часовой стрелке).
-    
-    if(turnL){
+    if(btn_R.isClick()){
       
         if(mainMenu){
           pointer = constrain(pointer - 1, 0, MAIN_MENU_ITEM);
@@ -126,43 +136,52 @@ void menuGUI(){
         }
 
     }
-    if(turnR){
+
+    if(btn_L.isClick()){
      if(mainMenu){
       pointer = constrain(pointer + 1, 0, MAIN_MENU_ITEM + 1);
       if(pointer == MAIN_MENU_ITEM + 1){
         pointer = 1;
         }
-    
       }
 
-      if(!mainMenu && pointer==1){
-        systemData.percent = constrain(systemData.percent + 1, 0, 1);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-        }
-      if(!mainMenu && pointer==2){
-        systemData.timeP = constrain(systemData.timeP + 10, 30, 30000);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-      }
-      if(!mainMenu && pointer==3){
-        systemData.soundP = constrain(systemData.soundP + 1, 0, 1);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-        }
-      if(!mainMenu && pointer==4){
-        systemData.contrast = constrain(systemData.contrast + CONTRAST_POINT, 5, 255);
-        oled.setContrast(systemData.contrast);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-      }
-      if(!mainMenu && pointer==5){
-        systemData.minP = constrain(systemData.minP + 1, 0, 2000);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-        }
-      if(!mainMenu && pointer==6){
-        systemData.maxP = constrain(systemData.maxP + 1, 0, 2000);
-        EEPROM.put(SYSTEM_DATA_ADDR,systemData);
-      }
+      //  if(turnR){
+      //   if(mainMenu){
+      //     pointer = constrain(pointer + 1, 0, MAIN_MENU_ITEM + 1);
+      //     if(pointer == MAIN_MENU_ITEM + 1){
+      //       pointer = 1;
+      //       }
+    
+      //   }
+
+      // if(!mainMenu && pointer==1){
+      //   systemData.percent = constrain(systemData.percent + 1, 0, 1);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      //   }
+      // if(!mainMenu && pointer==2){
+      //   systemData.timeP = constrain(systemData.timeP + 10, 30, 30000);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      // }
+      // if(!mainMenu && pointer==3){
+      //   systemData.soundP = constrain(systemData.soundP + 1, 0, 1);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      //   }
+      // if(!mainMenu && pointer==4){
+      //   systemData.contrast = constrain(systemData.contrast + CONTRAST_POINT, 5, 255);
+      //   oled.setContrast(systemData.contrast);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      // }
+      // if(!mainMenu && pointer==5){
+      //   systemData.minP = constrain(systemData.minP + 1, 0, 2000);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      //   }
+      // if(!mainMenu && pointer==6){
+      //   systemData.maxP = constrain(systemData.maxP + 1, 0, 2000);
+      //   EEPROM.put(SYSTEM_DATA_ADDR,systemData);
+      // }
     }
 
-     if( enc.getButton(KEY_PUSHED) ){              //   Если кнопка энкодера нажимается, то ...
+     if( btn_L.isDouble() ){              //   Если кнопка энкодера нажимается, то ...
         Serial.println("Нажали");                 //   Выводим текст.
         btn = !btn;
         mainMenu = !mainMenu;
